@@ -1,6 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:xml/xml.dart' as xml;
+import 'package:xml/xml.dart';
 
 import '../extensions/helpers_extension.dart';
 import '../retry.dart';
@@ -12,7 +12,7 @@ import 'youtube_http_client.dart';
 class DashManifest {
   static final _urlSignatureExp = RegExp(r'/s/(.*?)(?:/|$)');
 
-  final xml.XmlDocument _root;
+  final XmlDocument _root;
 
   ///
   late final Iterable<_StreamInfo> streams = parseMDP(_root);
@@ -22,7 +22,7 @@ class DashManifest {
 
   ///
   // ignore: deprecated_member_use
-  DashManifest.parse(String raw) : _root = xml.parse(raw);
+  DashManifest.parse(String raw) : _root = XmlDocument.parse(raw);
 
   ///
   static Future<DashManifest> get(YoutubeHttpClient httpClient, dynamic url) {
@@ -36,10 +36,10 @@ class DashManifest {
   static String? getSignatureFromUrl(String url) =>
       _urlSignatureExp.firstMatch(url)?.group(1);
 
-  bool _isDrmProtected(xml.XmlElement element) =>
+  bool _isDrmProtected(XmlElement element) =>
       element.findElements('ContentProtection').isNotEmpty;
 
-  _SegmentTimeline? extractSegmentTimeline(xml.XmlElement source) {
+  _SegmentTimeline? extractSegmentTimeline(XmlElement source) {
     final segmentTimeline = source.getElement('SegmentTimeline');
     if (segmentTimeline != null) {
       return _SegmentTimeline(segmentTimeline.findAllElements('S').map((e) {
@@ -51,8 +51,7 @@ class DashManifest {
     return null;
   }
 
-  _MsInfo extractMultiSegmentInfo(
-      xml.XmlElement element, _MsInfo msParentInfo) {
+  _MsInfo extractMultiSegmentInfo(XmlElement element, _MsInfo msParentInfo) {
     final msInfo = msParentInfo.copy(); // Copy
 
     final segmentList = element.getElement('SegmentList');
@@ -97,7 +96,7 @@ class DashManifest {
     return msInfo;
   }
 
-  List<_StreamInfo> parseMDP(xml.XmlDocument root) {
+  List<_StreamInfo> parseMDP(XmlDocument root) {
     if (root.getAttribute('type') == 'dynamic') {
       return const [];
     }
@@ -127,7 +126,7 @@ class DashManifest {
 
           if (mimeType.type == 'video' || mimeType.type == 'audio') {
             // Extract the base url
-            var baseUrl = JoinedIterable<xml.XmlElement>([
+            var baseUrl = JoinedIterable<XmlElement>([
               representation.childElements,
               adaptionSet.childElements,
               period.childElements,

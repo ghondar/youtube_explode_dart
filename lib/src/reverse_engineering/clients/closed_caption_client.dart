@@ -1,4 +1,4 @@
-import 'package:xml/xml.dart' as xml;
+import 'package:xml/xml.dart';
 
 import '../../extensions/helpers_extension.dart';
 import '../../retry.dart';
@@ -6,7 +6,7 @@ import '../youtube_http_client.dart';
 
 ///
 class ClosedCaptionClient {
-  final xml.XmlDocument root;
+  final XmlDocument root;
 
   ///
   late final Iterable<ClosedCaption> closedCaptions =
@@ -17,7 +17,7 @@ class ClosedCaptionClient {
 
   ///
   // ignore: deprecated_member_use
-  ClosedCaptionClient.parse(String raw) : root = xml.parse(raw);
+  ClosedCaptionClient.parse(String raw) : root = XmlDocument.parse(raw);
 
   ///
   static Future<ClosedCaptionClient> get(
@@ -32,7 +32,7 @@ class ClosedCaptionClient {
 
 ///
 class ClosedCaption {
-  final xml.XmlElement root;
+  final XmlElement root;
 
   ///
   String get text => root.text;
@@ -57,7 +57,7 @@ class ClosedCaption {
 
 ///
 class ClosedCaptionPart {
-  final xml.XmlElement root;
+  final XmlElement root;
 
   ///
   String get text => root.text;
